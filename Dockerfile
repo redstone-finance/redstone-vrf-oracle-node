@@ -13,4 +13,4 @@ RUN cargo build
 ENV PRIVATE_KEY=
 
 # Running the app
-CMD cargo start
+CMD cargo run
