@@ -1,4 +1,4 @@
-FROM rust:1.52
+FROM rust:1.60
 # FROM debian:stable-slim
 
 # TODO: improve this Dockerfile later
