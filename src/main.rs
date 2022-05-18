@@ -1,7 +1,7 @@
 extern crate dotenv;
 
 use tide::Request;
-use tide::{Body};
+use tide::{Body, log};
 use dotenv::dotenv;
 use std::env;
 use vrf::openssl::{CipherSuite, ECVRF};
@@ -25,13 +25,15 @@ struct VRFResponse {
 async fn main() -> tide::Result<()> {
     dotenv().ok();
     let mut app = tide::new();
+    // app.with(tide::log::LogMiddleware::new());
+    log::with_level(tide::log::LevelFilter::Debug);
 
     // Configure routes
     app.at("/").get(handle_root_request);
     app.at("/vrf-requests").post(handle_vrf_request);
 
     // Run web server at port 8080
-    println!("Running VRF web server on port: 8080");
+    log::info!("Running VRF web server on port: 8080");
     app.listen("127.0.0.1:8080").await?;
 
     Ok(())
@@ -40,10 +42,10 @@ async fn main() -> tide::Result<()> {
 async fn handle_vrf_request(mut req: Request<()>) -> tide::Result {
     // Extract request details
     let VRFRequestBody { message_hex } = req.body_json().await?;
-    println!("Received VRF request with message: {}", message_hex);
+    log::info!("Received VRF request with message: {}", message_hex);
 
     // Convert hex to bytes
-    let message_bytes = hex::decode(message_hex).unwrap();
+    let message_bytes = hex::decode(message_hex)?;
     let private_key_bytes = get_private_key_bytes().unwrap();
 
     // Calculate VRF
@@ -59,7 +61,7 @@ async fn handle_vrf_request(mut req: Request<()>) -> tide::Result {
         hash_hex: to_hex_string(hash_bytes),
         pub_hex,
     };
-    println!("Prepared VRF response: {:?}", vrf_response);
+    log::info!("Prepared VRF response: {:?}", vrf_response);
 
     // Prepare HTTP JSON response
     let mut http_response = tide::Response::new(200);
@@ -68,7 +70,7 @@ async fn handle_vrf_request(mut req: Request<()>) -> tide::Result {
 }
 
 async fn handle_root_request(_req: Request<()>) -> tide::Result {
-    println!("Received root request");
+    log::info!("Received root request");
     let public_key_hex = get_node_public_key_hex();
     let response_msg = format!("I am RedStone VRF Node. My public key: {}", public_key_hex);
     Ok(response_msg.into())
