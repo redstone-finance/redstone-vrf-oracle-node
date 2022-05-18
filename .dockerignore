@@ -14,5 +14,5 @@ Cargo.lock
 
 /target
 
-# ENV variables config (with private values)
+# ENV variables config (with private values
 .env
