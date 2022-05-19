@@ -1,13 +1,15 @@
 FROM rust:1.60
-# FROM debian:stable-slim
+
+RUN mkdir /app
+WORKDIR /app
 
 # TODO: improve this Dockerfile later
 # We can only build once and run web server in slim environment
-# Example here: https://github.com/pepoviola/tide-basic-crud/blob/main/Dockerfile
+# Example here: https://blog.logrocket.com/packaging-a-rust-web-service-using-docker/
 
 COPY . .
 
-RUN cargo build
+RUN cargo build --release
 
 # Configure env variables
 ENV PRIVATE_KEY=
@@ -15,4 +17,4 @@ ENV PRIVATE_KEY=
 EXPOSE 8080
 
 # Running the app
-CMD cargo run
+CMD "./target/release/redstone-vrf-oracle-node"

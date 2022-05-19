@@ -34,7 +34,7 @@ async fn main() -> tide::Result<()> {
 
     // Run web server at port 8080
     log::info!("Running VRF web server on port: 8080");
-    app.listen("127.0.0.1:8080").await?;
+    app.listen("0.0.0.0:8080").await?;
 
     Ok(())
 }
