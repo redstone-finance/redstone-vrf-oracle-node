@@ -71,8 +71,7 @@ async fn handle_vrf_request(mut req: Request<()>) -> tide::Result {
 
 async fn handle_root_request(_req: Request<()>) -> tide::Result {
     log::info!("Received root request");
-    let public_key_hex = get_node_public_key_hex();
-    let response_msg = format!("I am RedStone VRF Node. My public key: {}", public_key_hex);
+    let response_msg = format!("Hello! I am RedStone VRF Node.");
     Ok(response_msg.into())
 }
 
