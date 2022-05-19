@@ -12,5 +12,7 @@ RUN cargo build
 # Configure env variables
 ENV PRIVATE_KEY=
 
+EXPOSE 8080
+
 # Running the app
 CMD cargo run
